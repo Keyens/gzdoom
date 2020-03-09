@@ -375,8 +375,39 @@ bool DFrameBuffer::SetTextureParms(DrawParms *parms, FTexture *img, double xx, d
 			break;
 
 		case DTA_Fullscreen:
+		{
+			double aspect;
+			double srcwidth = img->GetDisplayWidthDouble();
+			double srcheight = img->GetDisplayHeightDouble();
+			aspect = srcwidth / srcheight;
 			parms->x = parms->y = 0;
+			if (!gameinfo.fullscreenautoaspect || (srcwidth == 320 && srcheight == 200) || (srcwidth == 640 && srcheight == 200) || aspect - 1.33 < 0.01 /* deliberately allow a large margin for error */)
+			{
+				// 4:3 should use the existing code as-is.
+				parms->keepratio = false; // This must be off in any case.
+			}
+			else
+			{
+				parms->keepratio = true;
+				auto screenratio = ActiveRatio(GetWidth(), GetHeight());
+				if ((screenratio > aspect) ^ (gameinfo.fullscreenautoaspect == 2))
+				{
+					// pillarboxed or vertically cropped (i.e. scale to height)
+					parms->destheight = GetHeight();
+					parms->destwidth =GetWidth() * aspect / screenratio;
+					parms->x = (GetWidth() - parms->destwidth) / 2;
+				}
+				else
+				{
+					// letterboxed or horizontally cropped (i.e. scale to width)
+					parms->destwidth = GetWidth();
+					parms->destheight = GetHeight() * screenratio / aspect;
+					parms->y = (GetHeight() - parms->destheight);
+				}
+				return false; // Do not call VirtualToRealCoords for this!
+			}
 			break;
+		}
 
 		case DTA_HUDRules:
 		case DTA_HUDRulesC:

@@ -621,8 +621,6 @@ FString V_GetColorStringByName (const char *name, FScriptPosition *sc = nullptr)
 int V_GetColor (const uint32_t *palette, const char *str, FScriptPosition *sc = nullptr);
 int V_GetColor(const uint32_t *palette, FScanner &sc);
 
-int CheckRatio (int width, int height, int *trueratio=NULL);
-static inline int CheckRatio (double width, double height) { return CheckRatio(int(width), int(height)); }
 inline bool IsRatioWidescreen(int ratio) { return (ratio & 3) != 0; }
 
 float ActiveRatio (int width, int height, float *trueratio = NULL);
@@ -633,7 +631,6 @@ int AspectBaseHeight(float aspect);
 double AspectPspriteOffset(float aspect);
 int AspectMultiplier(float aspect);
 bool AspectTallerThanWide(float aspect);
-void ScaleWithAspect(int &w, int &h, int Width, int Height);
 
 int GetUIScale(int altval);
 int GetConScale(int altval);
