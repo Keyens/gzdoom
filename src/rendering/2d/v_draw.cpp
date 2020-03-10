@@ -381,7 +381,7 @@ bool DFrameBuffer::SetTextureParms(DrawParms *parms, FTexture *img, double xx, d
 			double srcheight = img->GetDisplayHeightDouble();
 			aspect = srcwidth / srcheight;
 			parms->x = parms->y = 0;
-			if (!gameinfo.fullscreenautoaspect || (srcwidth == 320 && srcheight == 200) || (srcwidth == 640 && srcheight == 200) || aspect - 1.33 < 0.01 /* deliberately allow a large margin for error */)
+			if (!gameinfo.fullscreenautoaspect || (srcwidth == 320 && srcheight == 200) || (srcwidth == 640 && srcheight == 200) || fabs(aspect - 1.333) < 0.01 /* deliberately allow a large margin for error */)
 			{
 				// 4:3 should use the existing code as-is.
 				parms->keepratio = false; // This must be off in any case.
